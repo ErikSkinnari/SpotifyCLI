@@ -27,8 +27,10 @@ namespace SpotifyCLI.Utilities {
 
         private static IEnumerable<ICommand> GetCommands(IServiceProvider serviceProvider) {
             List<ICommand> commands = new List<ICommand>();
+            var spotifyClient = (ISpotifyClient)serviceProvider.GetService<ISpotifyClient>();
 
-            commands.Add(new ChangePlayStatusCommand((ISpotifyClient)serviceProvider.GetRequiredService<ISpotifyClient>()));
+            commands.Add(new ChangePlayStatusCommand(spotifyClient));
+            commands.Add(new SkipCommand(spotifyClient));
 
             return commands;
         }
