@@ -1,3 +1,4 @@
+using Draws.CLI;
 using SpotifyAPI.Web;
 using SpotifyCLI.Services;
 using SpotifyCLI.Utilities;
@@ -6,21 +7,16 @@ using System.Threading.Tasks;
 
 namespace SpotifyCLI {
     public class App {
-        private readonly IAuthService _authService;
         private readonly IOutputHandler _outputHandler;
-        private ISpotifyClient _spotify;
+        private readonly CommandParser _parser;
 
-        public App (IAuthService authService, IOutputHandler outputHandler) {
-            _authService = authService;
+        public App (CommandParser parser, IOutputHandler outputHandler) {
             _outputHandler = outputHandler;
+            _parser = parser;
         }
 
-        public async Task Run() {
-            _spotify = await _authService.SetSpotifyClientAsync(_spotify);
-            var result = await _spotify.Search.Item(new SearchRequest(SearchRequest.Types.All, "Never gonna give you up"));
-            var track = result.Tracks.Items.First();
-
-            _outputHandler.Output(track.Name);
+        public void Run(string[] args) {
+            _parser.Parse(args);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
+using Draws.CLI;
 using SpotifyAPI.Web;
 using SpotifyCLI.Utilities;
 
@@ -24,12 +25,23 @@ namespace SpotifyCLI.Services {
                 CodeChallengeMethod = "S256",
                 CodeChallenge = _challenge,
                 Scope = new [] { 
-                    Scopes.AppRemoteControl, 
-                    Scopes.Streaming, 
-                    Scopes.PlaylistReadPrivate, 
-                    Scopes.PlaylistModifyPrivate, 
-                    Scopes.UserModifyPlaybackState, 
-                    Scopes.UserReadPrivate 
+                    Scopes.AppRemoteControl,
+                    Scopes.PlaylistModifyPrivate,
+                    Scopes.PlaylistModifyPublic,
+                    Scopes.PlaylistReadCollaborative,
+                    Scopes.PlaylistReadPrivate,
+                    Scopes.Streaming,
+                    Scopes.UserFollowModify,
+                    Scopes.UserFollowRead,
+                    Scopes.UserLibraryModify,
+                    Scopes.UserLibraryRead,
+                    Scopes.UserModifyPlaybackState,
+                    Scopes.UserReadCurrentlyPlaying,
+                    Scopes.UserReadPlaybackPosition,
+                    Scopes.UserReadPlaybackState,
+                    Scopes.UserReadPrivate,
+                    Scopes.UserReadRecentlyPlayed,
+                    Scopes.UserTopRead,
                 }
             };
 
@@ -43,15 +55,18 @@ namespace SpotifyCLI.Services {
             return initialResponse;
         }
 
-        public async Task<ISpotifyClient> SetSpotifyClientAsync(ISpotifyClient client) {
+        public async Task<ISpotifyClient> CreateSpotifyClientAsync() {
             PKCETokenResponse tokenResponse = _config.Tokens;
-            if (String.IsNullOrEmpty(tokenResponse.AccessToken))
+
+            if (String.IsNullOrEmpty(tokenResponse.AccessToken) || tokenResponse.HasExpired())
                 tokenResponse = await UseNewTokens();
 
-            var config = SpotifyClientConfig.CreateDefault().WithAuthenticator(new PKCEAuthenticator(_config.ClientId, tokenResponse));
+            var authenticator = new PKCEAuthenticator(_config.ClientId, tokenResponse);
+            authenticator.TokenRefreshed += async (sender, token) => await _config.SaveTokens(token);
 
-            client = new SpotifyClient(config);
-            return client;
+            var config = SpotifyClientConfig.CreateDefault().WithAuthenticator(authenticator);
+
+            return new SpotifyClient(config);
         }
 
         private async Task<PKCETokenResponse> UseNewTokens() {

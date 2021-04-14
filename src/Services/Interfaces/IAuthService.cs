@@ -3,6 +3,6 @@ using SpotifyAPI.Web;
 
 namespace SpotifyCLI.Services { 
     public interface IAuthService { 
-        Task<ISpotifyClient> SetSpotifyClientAsync(ISpotifyClient client);
+        Task<ISpotifyClient> CreateSpotifyClientAsync();
     } 
 }

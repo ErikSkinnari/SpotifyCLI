@@ -3,9 +3,8 @@
 This is a small hobby-project that makes a CLI for Spotify made with .NET C#.
 
 ## Setup
-1. Clone this repository
-2. Clone my [CLI-Tools](https://www.github.com/Drawserqzez/CLI-Tools) repository
-3. Start coding :)
+0. Clone this repository
+1. Start coding :)
 
 ## Todo
 

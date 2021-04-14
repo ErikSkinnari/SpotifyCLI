@@ -9,17 +9,9 @@ namespace SpotifyCLI.Utilities {
         private const string _filePath = "./.Config/appConfig.json";
         private PKCETokenResponse _tokens;
 
-        public string ClientId {
-            get {
-                return _clientId;
-            }
-        }
+        public string ClientId { get { return _clientId; }}
 
-        public PKCETokenResponse Tokens {
-            get {
-                return _tokens;
-            }
-        }
+        public PKCETokenResponse Tokens { get { return _tokens; }}
 
         public AppConfig() {
             var directoryInfo = new DirectoryInfo("./.Config/");
