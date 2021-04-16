@@ -1,10 +1,9 @@
 ﻿using Draws.CLI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SpotifyCLI.Commands;
 using SpotifyCLI.Services;
 using SpotifyCLI.Utilities;
-using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace SpotifyCLI
 {
@@ -15,6 +14,7 @@ namespace SpotifyCLI
             // TODO: Find a way to inject a list/array of commands into the CommandParser
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((Context, services) => {
+                    services.AddSingleton<HttpClient>();
                     services.AddScoped<App>();
                     services.AddScoped<IAuthService, AuthService>();
                     services.AddScoped<CommandParser>();
