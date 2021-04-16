@@ -7,6 +7,10 @@ This is a small hobby-project that makes a CLI for Spotify made with .NET C#.
 1. Add github-packages to your nuget-sources, because a dependency of this project is [my CLI library](https://github.com/Drawserqzez/CLI/)
 2. Start coding :)
 
+## Feature suggestions
+If there's a feature you'd like to see, please create an issue for it and I'll look it over :) 
+Alternatively, you could try to make it yourself and create a pr :D
+
 ## Running the app after publishing
 You'll wanna put the exe in the PATH someplace, and maybe change the name of the .exe to something shorter.
 
