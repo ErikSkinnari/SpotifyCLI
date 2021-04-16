@@ -4,6 +4,7 @@ using FakeItEasy;
 using System;
 using Xunit;
 using SpotifyAPI.Web;
+using System.Collections.Generic;
 
 namespace SpotifyCLI.Tests
 {
@@ -28,6 +29,36 @@ namespace SpotifyCLI.Tests
             // Assert
             A.CallTo(() => playingClient.Player.PausePlayback()).MustHaveHappenedOnceExactly();
             A.CallTo(() => pausedClient.Player.ResumePlayback()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Next_should_be_called_properly() {
+            // Arrange
+            var client = A.Fake<ISpotifyClient>();
+            A.CallTo(() => client.Player.SkipNext()).Returns(true);
+
+            var sut = new NextCommand(client);
+
+            // Act
+            sut.RunCommand();
+
+            // Assert
+            A.CallTo(() => client.Player.SkipNext()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Previous_should_be_called_properly() {
+            // Arrange
+            var client = A.Fake<ISpotifyClient>();
+            A.CallTo(() => client.Player.SkipPrevious()).Returns(true);
+
+            var sut = new PreviousCommand(client);
+
+            // Act
+            sut.RunCommand();
+
+            // Assert
+            A.CallTo(() => client.Player.SkipPrevious()).MustHaveHappenedOnceExactly();
         }
     }
 }

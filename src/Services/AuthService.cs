@@ -58,6 +58,7 @@ namespace SpotifyCLI.Services {
         public async Task<ISpotifyClient> CreateSpotifyClientAsync() {
             PKCETokenResponse tokenResponse = _config.Tokens;
 
+            // TODO: Refresh token instead of getting a new one :)
             if (String.IsNullOrEmpty(tokenResponse.AccessToken) || tokenResponse.HasExpired())
                 tokenResponse = await UseNewTokens();
 
