@@ -4,7 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5</TargetFramework>
     <RootNamespace>SpotifyCLI</RootNamespace>
-    <TargetName>spf</TargetName>
+
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>

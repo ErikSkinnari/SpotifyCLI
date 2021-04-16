@@ -15,9 +15,10 @@ Alternatively, you could try to make it yourself and create a pr :D
 ## Publishing and running the app
 0. Open your terminal of choice and run the following command:
 
-    ` dotnet publish -o <output-directory> -r <your-system> -p:PublishSingleFile=true --self-contained true `
+    ` dotnet publish -o <output-directory> -r <your-system> `
 
-1. You'll then wanna put the output in the PATH someplace so that you can use it from your terminal anywhere :)
+1. Put the published contents in your PATH if you haven't already
+2. Rename the .exe to something shorter for easier use
 
 ## Todo
 
