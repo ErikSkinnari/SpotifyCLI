@@ -10,6 +10,6 @@ This is a small hobby-project that makes a CLI for Spotify made with .NET C#.
 
 - [ ] Make an error handler
 - [ ] Make commands to do things
-- [ ] Make a template for the config-file
-- [ ] If no config file is found, guide the user to create one
+- [x] Make a template for the config-file
+- [x] If no config file is found, guide the user to create one
 - [ ] Start TDD instead of doing bad things
