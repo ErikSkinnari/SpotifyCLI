@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5</TargetFramework>
     <RootNamespace>SpotifyCLI</RootNamespace>
+    <AssemblyName>spf</AssemblyName>
 
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
