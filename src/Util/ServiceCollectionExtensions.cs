@@ -1,7 +1,6 @@
 using Draws.CLI;
 using Microsoft.Extensions.DependencyInjection;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Http;
 using SpotifyCLI.Commands;
 using SpotifyCLI.Services;
 using System;
@@ -30,7 +29,8 @@ namespace SpotifyCLI.Utilities {
             var spotifyClient = (ISpotifyClient)serviceProvider.GetService<ISpotifyClient>();
 
             commands.Add(new ChangePlayStatusCommand(spotifyClient));
-            commands.Add(new SkipCommand(spotifyClient));
+            commands.Add(new NextCommand(spotifyClient));
+            commands.Add(new PreviousCommand(spotifyClient));
 
             return commands;
         }

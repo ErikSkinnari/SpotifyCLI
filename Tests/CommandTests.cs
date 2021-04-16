@@ -32,17 +32,27 @@ namespace SpotifyCLI.Tests
         }
 
         [Fact]
-        public void Skip_should_jump_in_correct_direction() {
+        public void Next_should_be_called_properly() {
             // Arrange
             var client = A.Fake<ISpotifyClient>();
-            A.CallTo(() => client.Player.SkipNext());
+            A.CallTo(() => client.Player.SkipNext()).Returns(true);
 
-            var sut = new SkipCommand(client);
-            var args = new Dictionary<string, string>();
-            args.Add("fwd", "false");
-            args.Add("bck", "true");
+            var sut = new NextCommand(client);
 
-            sut.SetArguments(args);
+            // Act
+            sut.RunCommand();
+
+            // Assert
+            A.CallTo(() => client.Player.SkipNext()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Previous_should_be_called_properly() {
+            // Arrange
+            var client = A.Fake<ISpotifyClient>();
+            A.CallTo(() => client.Player.SkipPrevious()).Returns(true);
+
+            var sut = new PreviousCommand(client);
 
             // Act
             sut.RunCommand();

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SpotifyCLI.Commands {
-    [Command("playback", "Toggles the current player between play and pause", true)]
+    [Command("playback", "Toggles the current player between play and pause", isSingleArgument: true)]
     public class ChangePlayStatusCommand : ICommand {
         private readonly ISpotifyClient _spotifyClient;
         private CurrentlyPlayingContext _currentlyPlaying;
