@@ -1,6 +1,7 @@
 # Spotify CLI
 
-This is a small hobby-project that makes a CLI for Spotify made with .NET C#.
+This is a small hobby-project that makes a CLI for Spotify, written in C#.
+The goal of the project is to make as good of a Spotify experience as possible from the terminal, becaue I thought it'd be fun/useful to control spotify from there :D
 
 ## Setup
 0. Clone or fork this repository
@@ -11,16 +12,18 @@ This is a small hobby-project that makes a CLI for Spotify made with .NET C#.
 If there's a feature you'd like to see, please create an issue for it and I'll look it over :) 
 Alternatively, you could try to make it yourself and create a pr :D
 
-## Running the app after publishing
-You'll wanna put the exe in the PATH someplace, and maybe change the name of the .exe to something shorter.
+## Publishing and running the app
+0. Open your terminal of choice and run the following command:
+
+    ` dotnet publish -o <output-directory> -r <your-system> -p:PublishSingleFile=true --self-contained true `
+
+1. You'll then wanna put the output in the PATH someplace so that you can use it from your terminal anywhere :)
 
 ## Todo
 
-- [ ] Make an error handler
-- [ ] Make commands to do things
+- [ ] Make more commands
 - [x] Make a template for the config-file
 - [x] If no config file is found, guide the user to create one
-- [ ] Start TDD instead of doing bad things
 
 ## SpotifyAPI-NET
 
