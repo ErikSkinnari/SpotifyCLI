@@ -34,6 +34,8 @@ namespace SpotifyCLI.Utilities {
             commands.Add(new PlayCommand(spotifyClient));
             commands.Add(new PauseCommand(spotifyClient));
 
+            commands.Add(new ChangeVolumeCommand(spotifyClient));
+
             return commands;
         }
     }
