@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5</TargetFramework>
     <RootNamespace>SpotifyCLI</RootNamespace>
+    <TargetName>spf</TargetName>
   </PropertyGroup>
 
   <ItemGroup>
