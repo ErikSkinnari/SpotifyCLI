@@ -106,14 +106,21 @@ namespace SpotifyCLI.Services {
         }
 
         private async Task <PKCETokenResponse> RefreshTokens() {
-            _outputHandler.Output("Refreshing access-tokens, please wait a moment...");
-            var requestContent = new PKCETokenRefreshRequest(_config.ClientId, _config.Tokens.RefreshToken).ToUrlEncoded();
+            try {
+                _outputHandler.Output("Refreshing access-tokens, please wait a moment...");
+                var requestContent = new PKCETokenRefreshRequest(_config.ClientId, _config.Tokens.RefreshToken).ToUrlEncoded();
 
-            var res = await _httpClient.PostAsync("https://accounts.spotify.com/api/token", requestContent);
-            var jsonData = await res.Content.ReadAsStreamAsync();
+                var res = await _httpClient.PostAsync("https://accounts.spotify.com/api/token", requestContent);
+                var jsonData = await res.Content.ReadAsStreamAsync();
 
-            var newToken = await _config.SaveTokens(jsonData);
-            return newToken;
+                var newToken = await _config.SaveTokens(jsonData);
+                return newToken;
+            } catch (Exception e) {
+                _outputHandler.Output("Something went wrong while trying to refresh the authentication token: ");
+                _outputHandler.Output(e.Message);
+
+                return await UseNewTokens();
+            }
         }
     }
 }
