@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Draws.CLI;
 using SpotifyAPI.Web;
@@ -11,12 +13,13 @@ namespace SpotifyCLI.Services {
     public class AuthService : IAuthService {
         private readonly string _challenge;
         private readonly IAppConfig _config;
+        private readonly HttpClient _httpClient;
         private readonly Uri _loginRequestUri;
         private readonly IOutputHandler _outputHandler;
         private const string _redirectUri = "http://localhost:1337/callback/";
         private readonly string _verifier;
 
-        public AuthService(IAppConfig config, IOutputHandler outputHandler) {
+        public AuthService(IAppConfig config, IOutputHandler outputHandler, HttpClient httpClient) {
             (_verifier, _challenge) = PKCEUtil.GenerateCodes();
             _config = config;
             _outputHandler = outputHandler;
@@ -45,6 +48,8 @@ namespace SpotifyCLI.Services {
                 }
             };
 
+            _httpClient = httpClient;
+
             _loginRequestUri = loginRequest.ToUri();
         } 
 
@@ -58,14 +63,12 @@ namespace SpotifyCLI.Services {
         public async Task<ISpotifyClient> CreateSpotifyClientAsync() {
             PKCETokenResponse tokenResponse = _config.Tokens;
 
-            // TODO: Refresh token instead of getting a new one :)
-            if (String.IsNullOrEmpty(tokenResponse.AccessToken) || tokenResponse.HasExpired())
+            if (String.IsNullOrEmpty(tokenResponse.AccessToken) || String.IsNullOrEmpty(tokenResponse.RefreshToken))
                 tokenResponse = await UseNewTokens();
+            else if (tokenResponse.HasExpired()) 
+                tokenResponse = await RefreshTokens();
 
-            var authenticator = new PKCEAuthenticator(_config.ClientId, tokenResponse);
-            authenticator.TokenRefreshed += async (sender, token) => await _config.SaveTokens(token);
-
-            var config = SpotifyClientConfig.CreateDefault().WithAuthenticator(authenticator);
+            var config = SpotifyClientConfig.CreateDefault().WithAuthenticator(new PKCEAuthenticator(_config.ClientId, tokenResponse));
 
             return new SpotifyClient(config);
         }
@@ -101,6 +104,18 @@ namespace SpotifyCLI.Services {
             var tokenResponse = await GetCallbackTokens(authCode);
             await _config.SaveTokens(tokenResponse);
             return tokenResponse;
+        }
+
+        private async Task <PKCETokenResponse> RefreshTokens() {
+            _outputHandler.Output("Refreshing access-tokens, please wait a moment...");
+            var refreshRequest = new PKCETokenRefreshRequest(_config.ClientId, _config.Tokens.RefreshToken);
+            var jsonContent = JsonContent.Create<PKCETokenRefreshRequest>(refreshRequest);
+
+            var res = await _httpClient.PostAsync("https://accounts.spotify.com/api/token", jsonContent);
+            var newToken = await res.Content.ReadFromJsonAsync<PKCETokenResponse>();
+
+            await _config.SaveTokens(newToken);
+            return newToken;
         }
     }
 }
