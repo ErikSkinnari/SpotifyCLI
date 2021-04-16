@@ -15,7 +15,7 @@ namespace SpotifyCLI.Services {
         private readonly HttpClient _httpClient;
         private readonly Uri _loginRequestUri;
         private readonly IOutputHandler _outputHandler;
-        private const string _redirectUri = "http://localhost:1337/callback/";
+        private const string _redirectUri = @"http://localhost:8080/callback/";
         private readonly string _verifier;
 
         public AuthService(IAppConfig config, IOutputHandler outputHandler, HttpClient httpClient) {
