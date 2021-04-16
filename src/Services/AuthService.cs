@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Draws.CLI;
 using SpotifyAPI.Web;
@@ -108,13 +107,12 @@ namespace SpotifyCLI.Services {
 
         private async Task <PKCETokenResponse> RefreshTokens() {
             _outputHandler.Output("Refreshing access-tokens, please wait a moment...");
-            var refreshRequest = new PKCETokenRefreshRequest(_config.ClientId, _config.Tokens.RefreshToken);
-            var jsonContent = JsonContent.Create<PKCETokenRefreshRequest>(refreshRequest);
+            var requestContent = new PKCETokenRefreshRequest(_config.ClientId, _config.Tokens.RefreshToken).ToUrlEncoded();
 
-            var res = await _httpClient.PostAsync("https://accounts.spotify.com/api/token", jsonContent);
-            var newToken = await res.Content.ReadFromJsonAsync<PKCETokenResponse>();
+            var res = await _httpClient.PostAsync("https://accounts.spotify.com/api/token", requestContent);
+            var jsonData = await res.Content.ReadAsStreamAsync();
 
-            await _config.SaveTokens(newToken);
+            var newToken = await _config.SaveTokens(jsonData);
             return newToken;
         }
     }
