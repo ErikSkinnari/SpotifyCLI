@@ -1,13 +1,16 @@
 using Draws.CLI;
 using SpotifyAPI.Web;
+using System;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SpotifyCLI.Utilities {
     public class AppConfig : IAppConfig {
         private readonly string _clientId;
-        private const string _filePath = "./.Config/appConfig.json";
+        private string _directoryPath;
+        private string _filePath;
         private readonly IOutputHandler _outputHandler;
         private PKCETokenResponse _tokens;
 
@@ -16,6 +19,10 @@ namespace SpotifyCLI.Utilities {
         public PKCETokenResponse Tokens { get { return _tokens; }}
 
         public AppConfig(IOutputHandler outputHandler) {
+            string location = AppDomain.CurrentDomain.BaseDirectory;
+
+            _directoryPath = $"{location}/.config/";
+            _filePath = $"{location}/.config/appConfig.json";
             _outputHandler = outputHandler;
 
             Configuration configData = Initialise();
@@ -24,7 +31,7 @@ namespace SpotifyCLI.Utilities {
             _tokens = configData.Tokens;
         }
 
-        private static Configuration GetConfiguration() {
+        private Configuration GetConfiguration() {
             using StreamReader sr = new StreamReader(_filePath);
 
             var jsonData = sr.ReadToEnd();
@@ -33,7 +40,7 @@ namespace SpotifyCLI.Utilities {
         }
 
         private Configuration Initialise() {
-            var directoryInfo = new DirectoryInfo("./.Config/");
+            var directoryInfo = new DirectoryInfo(_directoryPath);
 
             if (!directoryInfo.Exists) {
                 directoryInfo.Create();
@@ -44,7 +51,8 @@ namespace SpotifyCLI.Utilities {
 
             if (!configFile.Exists) {
                 _outputHandler.Output("No config file was found. Creating...");
-                configFile.Create();
+                var fileStream = configFile.Create();
+                fileStream.Close();
 
                 // TODO: Use future input-handler to take a client id from the user
                 var configData = new Configuration() { ClientId = "ClientId123", Tokens = new PKCETokenResponse() { AccessToken = "" }};
